@@ -33,17 +33,18 @@
   </div>
 </div>
  <nav class="navbar navbar-default">
-<input type="text" placeholder="Search Tweets Timestamp" ng-model="searchTweet">
-<input type="text" placeholder="Search Tweets limit" ng-model="searchLimit">
 <input type="text" placeholder="Delete Tweet by Id" ng-model="deleteTweetId">
-<input type="text" placeholder="User to follow" ng-model="userToFollow">
+<input type="text" placeholder="User to Follow" ng-model="userToFollow">
+<input type="text" placeholder="User to Unfollow" ng-model="userToUnFollow">
+<input type="text" placeholder=" User To Search" ng-model="userToSearch">
 
-
-<button type="button" class= "btn btn-outline-secondary" ng-click = "logout()"> Log Out </button>
-<button type="button" class= "btn btn-outline-secondary" ng-click = "searchTweets()"> Search! </button>
-<button type"button" class= "btn btn-outline-secondary" ng-click ="deleteTweet()"> Delete Tweet </button>
-<button type="button" class="btn btn-outline-secondary" ng-click="follow()"> Follow User </button>
+<button type="button" class= "btn btn-outline-secondary" ng-click = "logout()"> LogOut </button>
+<button type"button" class= "btn btn-outline-secondary" ng-click ="deleteTweet()"> DeleteTweet </button>
+<button type="button" class="btn btn-outline-secondary" ng-click="follow()"> Follow  </button>
+<button type-"button" class="btn btn-outline-secondary" ngclick="unfollow()"> Unfollow  </button>
 <button type="button" class="btn btn-outline-secondary" ng-click="openSearch()"> Advance Search! </button>
+<button type="button" class="btn btn-outline-secondary" ng-click="searchUser()"> Search User </button>
+
 <hr>
 <input type="text" placeholder="Get tweet id" ng-model="tweetId">
 <button type="button" class= "btn btn-outline-secondary" ng-click = "getItem()"> Get Item! </button>

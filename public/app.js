@@ -15,6 +15,7 @@ app.config(["$routeProvider", "$locationProvider", function($routeProvider, $loc
       templateUrl: "signUp.html",
       controller: "adduserCtrl"
     })
+
 }]);
 /*
 app.config(['$urlRouterProvider','$stateProvider'],function($urlRouterProvider,$stateProvider){
@@ -31,7 +32,7 @@ app.config(['$urlRouterProvider','$stateProvider'],function($urlRouterProvider,$
 
 
 
-app.controller("mainCtrl",function($scope,$location,$http,$uibModal){
+app.controller("mainCtrl",function($scope,$location,$http,$uibModal,srvShareData){
 
 	//$http.get('/getAllTweets').success(function(res){
 	//	$scope.tweets = res;
@@ -102,7 +103,6 @@ app.controller("mainCtrl",function($scope,$location,$http,$uibModal){
 			else{
 				alert("Fail");
 			}
-			//console.log(res);
 		})
 	}
 
@@ -115,6 +115,22 @@ app.controller("mainCtrl",function($scope,$location,$http,$uibModal){
 		$http.post('/follow',jsonToPost).success(function(res){
 			if (res.status === "OK"){
 				alert("FOLLOWED");
+			}
+			else{
+				alert("Fail");
+			}
+		})
+	}
+
+	$scope.unfollow = function(){
+		var jsonToPost = {
+			username: $scope.userToUnFollow,
+			follow: false
+		}
+
+		$http.post('/follow',jsonToPost).success(function(res){
+			if(res.status === "OK"){
+				alert("UNFOLLOWED");
 			}
 			else{
 				alert("Fail");
@@ -149,7 +165,6 @@ app.controller("mainCtrl",function($scope,$location,$http,$uibModal){
 	}
 
 	$scope.getUserFollowings = function(){
-		console.log("WAS CALLED")
 		$http.get('/user/' + $scope.usernameFollowing + '/following').success(function(res){
 			console.log(res);
 			var modalInstance = $uibModal.open({
@@ -162,6 +177,21 @@ app.controller("mainCtrl",function($scope,$location,$http,$uibModal){
 				}
 			})
 		})
+	}
+
+	$scope.searchUser = function(){
+		console.log("HIT THIS")
+		var search = $scope.userToSearch;
+		var modalInstance = $uibModal.open({
+			templateUrl:'/profile.html',
+			controller:'profileCtrl',
+			resolve:{
+				user: function(){
+					return search;
+				}
+			}
+		})
+
 	}
 })
 
@@ -272,3 +302,52 @@ app.controller("followingCtrl",function($scope,$location,$http,$uibModalInstance
 		$uibModalInstance.close();
 	}
 })
+
+app.controller("profileCtrl",function($scope,$location,$http,user){
+	$scope.currentUser = user;
+
+
+	$http.get('/user/' + user + '/followers').success(function(res){
+		$scope.followers = res.users;
+		if(res.users.indexOf(req.session.user) > -1){
+			console.log("THIS IS TRUEEEEEEE");
+		}		
+	})
+
+	$http.get('/user/'  + user + '/following').success(function(res){
+		$scope.following  = res.users;
+	})
+
+
+})
+
+
+app.service('srvShareData', function($window) {
+          var KEY = 'App.SelectedValue';
+
+        var addData = function(newObj) {
+            var mydata = $window.sessionStorage.getItem(KEY);
+            if (mydata) {
+                mydata = JSON.parse(mydata);
+            } else {
+                mydata = [];
+            }
+            mydata[0] = newObj;
+            $window.sessionStorage.setItem(KEY, JSON.stringify(mydata));
+        };
+
+        var getData = function(){
+            var mydata = $window.sessionStorage.getItem(KEY);
+            if (mydata) {
+                mydata = JSON.parse(mydata);
+            }
+            return mydata || [];
+        };
+
+        return {
+            addData: addData,
+            getData: getData,
+        };
+    });
+
+

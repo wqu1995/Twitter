@@ -260,6 +260,15 @@ app.controller("searchCtrl", function($scope,$location,$http,$uibModalInstance){
 		else{
 			selection = false;
 		}
+		if($scope.timestamp === "")
+			$scope.timestamp = null;
+		if($scope.limit === "")
+			$scope.limit = null;
+		if($scope.q === "")
+			$scope.q = null;
+		if($scope.username === "")
+			$scope.username = null;
+		
 		var data = {
 			timestamp : $scope.timestamp,
 			limit: $scope.limit,

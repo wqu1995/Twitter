@@ -267,6 +267,8 @@ app.controller("searchCtrl", function($scope,$location,$http,$uibModalInstance){
 			username: $scope.username,
 			following: selection
 		}
+		console.log("THIS IS DATA")
+		console.log(data);
 		$http.post('/search',data).success(function(res){
 			if(res.status == "OK"){
 				console.log(res);

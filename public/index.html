@@ -34,16 +34,18 @@
 </div>
  <nav class="navbar navbar-default">
 <input type="text" placeholder="Delete Tweet by Id" ng-model="deleteTweetId">
-<input type="text" placeholder="User to Follow" ng-model="userToFollow">
-<input type="text" placeholder="User to Unfollow" ng-model="userToUnFollow">
-<input type="text" placeholder=" User To Search" ng-model="userToSearch">
-
-<button type="button" class= "btn btn-outline-secondary" ng-click = "logout()"> LogOut </button>
 <button type"button" class= "btn btn-outline-secondary" ng-click ="deleteTweet()"> DeleteTweet </button>
+<input type="text" placeholder="User to Follow" ng-model="userToFollow">
 <button type="button" class="btn btn-outline-secondary" ng-click="follow()"> Follow  </button>
-<button type-"button" class="btn btn-outline-secondary" ngclick="unfollow()"> Unfollow  </button>
-<button type="button" class="btn btn-outline-secondary" ng-click="openSearch()"> Advance Search! </button>
+
+<input type="text" placeholder="User to Unfollow" ng-model="userToUnFollow">
+<button type-"button" class="btn btn-outline-secondary" ng-click="unfollow()"> Unfollow  </button>
+
+<input type="text" placeholder=" User To Search" ng-model="userToSearch">
 <button type="button" class="btn btn-outline-secondary" ng-click="searchUser()"> Search User </button>
+
+
+<button type="button" class="btn btn-outline-secondary" ng-click="openSearch()"> Advance Search! </button>
 
 <hr>
 <input type="text" placeholder="Get tweet id" ng-model="tweetId">
@@ -83,7 +85,8 @@
 </div>
 
 
-<div class="col-md-3"> Trending Column </div>
+<div class="col-md-3"> <button type="button" class= "btn btn-outline-secondary" ng-click = "logout()"> LogOut </button>
+ </div>
 </div>
 </body>
 </html>

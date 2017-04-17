@@ -1164,12 +1164,12 @@ app.post('/follow',function(req,res){
 		})
 	}
 })
-/*
+
 app.listen(8080, "172.31.64.118",function(){
 	console.log("Server listening on port " + 9000);
 })
-*/
 
+/*
 app.listen(9000,"0.0.0.0",function(){
 	console.log("server listening on port " + 9000);
-})
+})*/

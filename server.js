@@ -17,16 +17,16 @@ var url = 'mongodb://52.90.176.234:27017/twitter';
 //var url = 'mongodb://localhost:27017/twitter';
 
 
-
+/*
 mongoClient.connect(url,function(err,db){
 	assert.equal(null,err);
 	console.log("CONNECTION SUCCESS");
 	//db.tweets.createIndex({"content": "text"});
-	})
+	})*/
 
 
 var connection = mysql.createConnection({
-	host: '34.207.92.80',
+	host: '54.86.36.12',
 	user: 'root',
 	password: 'cse356',
 	database: 'Twitter'
@@ -325,12 +325,25 @@ app.post('/additem', function(req,res){
 //console.log('in add item')
 var timestamp = Math.floor(dateTime/1000);	
 var postid = crypto.createHash('md5').update(req.body.content+cryptoRandomString(10)).digest('hex');
+		if(req.body.parent != null && req.body.parent != ""){
 		var post = {
 			id : postid,
 			content: req.body.content,
 			username: req.session.user,
-			timestamp: timestamp
+			timestamp: timestamp,
+			parent: req.body.parent
 		}
+	}
+		else{
+			console.log("NOT WAS CALLED !!!");
+			var post = {
+				id : postid,
+				content: req.body.content,
+				username: req.session.user,
+				timestamp: timestamp
+			}
+		}
+
 		connection.query('INSERT INTO Tweets SET ?', post, function(err, result){
 			if(err){
 				console.log(post);
@@ -1098,6 +1111,25 @@ app.get('/user/:username/following',function(req,res){
 	}
 })
 
+app.post('/item/:id/like',function(req,res){
+	if(req.body.like == true){
+		connection.query('UPDATE Tweets SET LikeCounter = LikeCounter + 1 WHERE id =' + mysql.escape(req.params.id) + ';',function(err,result){
+			if(err){
+				var jsonToSend = {
+					status: "error"
+				}
+				res.send(jsonToSend);
+			}
+			else{
+				var jsonToSend = {
+					status: "OK"
+				}
+				res.send(jsonToSend);
+			}
+		})
+	}
+})
+
 
 
 app.post('/follow',function(req,res){
@@ -1132,11 +1164,12 @@ app.post('/follow',function(req,res){
 		})
 	}
 })
-
+/*
 app.listen(8080, "172.31.64.118",function(){
 	console.log("Server listening on port " + 9000);
 })
+*/
 
-/*app.listen(9000,"0.0.0.0",function(){
+app.listen(9000,"0.0.0.0",function(){
 	console.log("server listening on port " + 9000);
-})*/
+})

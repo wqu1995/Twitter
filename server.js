@@ -14,6 +14,17 @@ var assert = require('assert');
 const dateTime = Date.now();
 var fileupload = require('express-fileupload');
 var cassandra = require('cassandra-driver');
+var amqp = require('amqplib/callback_api');
+var amqpConn, chan;
+var exchange = 'twitter';
+
+amqp.connect('amqp://test:test@54.227.232.158', function(err,conn){
+	amqpConn = conn;
+	chan = conn.createChannel(function(err,ch){
+		ch.assertExchange('twitter', 'direct');
+	})
+	console.log("connected to amqp");
+})
 
 var cassandraClient = new cassandra.Client({
 	contactPoints: ['54.227.232.158'],
@@ -1038,6 +1049,18 @@ app.delete('/item/:id',function(req,res){
 	})
 })*/
 console.log("in delete item")
+	connection.query('SELECT media FROM Tweets WHERE id = '+mysql.escape(req.params.id), function(err,result){
+		if(err){
+			res.send({
+				status: "error",
+				error: err
+			})
+		}else{
+			if(result.length!=0){
+				chan.publish(exchange, 'chicken', new Buffer(result[0].media.toString()));
+			}
+		}
+	})
 	connection.query('DELETE FROM Tweets WHERE id = '+mysql.escape(req.params.id), function(err,result){
 		if(err){
 			res.send({

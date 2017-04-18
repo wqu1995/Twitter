@@ -12,6 +12,18 @@ var nodemailer = require('nodemailer');
 var mongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 const dateTime = Date.now();
+var fileupload = require('express-fileupload');
+var cassandra = require('cassandra-driver');
+
+var cassandraClient = new cassandra.Client({
+	contactPoints: ['54.227.232.158'],
+	keyspace: 'twitter'
+},function(err){
+	if(err)
+		console.log(err);
+	else
+		console.log("connected to cassandra")
+})
 
 var url = 'mongodb://52.90.176.234:27017/twitter';
 //var url = 'mongodb://localhost:27017/twitter';
@@ -72,7 +84,7 @@ app.use(bodyParser.urlencoded({
 	extended: true
 }));
 //app.use(require('morgan')('dev'));
-
+app.use(fileupload());
 app.get('/', function(req,res){
 	if(typeof req.session.user === 'undefined'){
 		res.redirect('/login');
@@ -325,22 +337,51 @@ app.post('/additem', function(req,res){
 //console.log('in add item')
 var timestamp = Math.floor(dateTime/1000);	
 var postid = crypto.createHash('md5').update(req.body.content+cryptoRandomString(10)).digest('hex');
+		var post;
 		if(req.body.parent != null && req.body.parent != ""){
-		var post = {
-			id : postid,
-			content: req.body.content,
-			username: req.session.user,
-			timestamp: timestamp,
-			parent: req.body.parent
+			if(req.body.media !=null && req.body.media != ""){
+				post = {
+					id: postid,
+					content: req.body.content,
+					username: req.session.user,
+					timestamp: timestamp,
+					parent: req.body.parent,
+					media: req.body.media.toString()
+				}
+			}
+			else{
+				post = {
+					id: postid,
+					content: req.body.content,
+					username: req.session.user,
+					timestamp: timestamp,
+					parent: req.body.parent,
+					media: null
+				}
+			}
 		}
-	}
+			
 		else{
-			console.log("NOT WAS CALLED !!!");
-			var post = {
-				id : postid,
-				content: req.body.content,
-				username: req.session.user,
-				timestamp: timestamp
+			if(req.body.media !=null && req.body.media != ""){
+				post = {
+					id: postid,
+					content: req.body.content,
+					username: req.session.user,
+					timestamp: timestamp,
+					parent: null,
+					media: req.body.media.toString()
+				}
+			}
+			else{
+				post = {
+					id: postid,
+					content: req.body.content,
+					username: req.session.user,
+					timestamp: timestamp,
+					parent: null,
+					media: null,
+
+				}
 			}
 		}
 
@@ -355,7 +396,9 @@ var postid = crypto.createHash('md5').update(req.body.content+cryptoRandomString
 			}else{
 				res.send({
 					status: "OK",
-					id: postid
+					id: postid,
+					parent: req.body.parent,
+					media: req.body.media
 				})
 			}
 		})
@@ -1112,7 +1155,9 @@ app.get('/user/:username/following',function(req,res){
 })
 
 app.post('/item/:id/like',function(req,res){
+	console.log('in here');
 	if(req.body.like == true){
+		console.log("in true");
 		connection.query('UPDATE Tweets SET LikeCounter = LikeCounter + 1 WHERE id =' + mysql.escape(req.params.id) + ';',function(err,result){
 			if(err){
 				var jsonToSend = {
@@ -1127,6 +1172,26 @@ app.post('/item/:id/like',function(req,res){
 				res.send(jsonToSend);
 			}
 		})
+	}else if(req.body.like == false){
+		console.log("in false");
+
+		connection.query('UPDATE Tweets SET LikeCounter = LikeCounter - 1 WHERE id =' + mysql.escape(req.params.id) + ';',function(err,result){
+			if(err){
+				var jsonToSend = {
+					status: "error"
+				}
+				res.send(jsonToSend);
+			}
+			else{
+				var jsonToSend = {
+					status: "OK"
+				}
+				res.send(jsonToSend);
+			}
+		})
+	}
+	else{
+		res.send("???")
 	}
 })
 
@@ -1165,7 +1230,48 @@ app.post('/follow',function(req,res){
 	}
 })
 
-app.listen(8080, "172.31.64.118",function(){
+app.post('/addmedia', function(req,res){
+	var id = crypto.createHash('md5').update(req.files.content.name+cryptoRandomString(10)).digest('hex');
+	var data = [id, req.files.content.data];
+	cassandraClient.execute('INSERT INTO Media (id, content) VALUES (?, ?)',data, function(err, result){
+		if(err){
+			res.send({
+				status: "error",
+				error: err
+			});
+		}
+		else{
+			res.send({
+				status: "OK",
+				id: id
+			});
+		}
+	})
+})
+
+app.get('/media/:id',function(req,res){
+	//console.log(req.params.id);
+	var query = 'SELECT content FROM Media WHERE id = ?';
+	var par = [req.params.id.toString()];
+	cassandraClient.execute(query, par, function(err,result){
+		if(err){
+			res.send({
+				status: "error",
+				error: err
+			})
+		}else if(result.rows.length == 0){
+			res.send({
+				status: "error",
+				error: "no item found"
+			})
+		}else{
+			res.write(new Buffer(result.rows[0].content), 'binary');
+			res.end();
+		}
+	})
+})
+
+app.listen(8080, "127.0.0.1",function(){
 	console.log("Server listening on port " + 9000);
 })
 

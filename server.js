@@ -407,9 +407,7 @@ var postid = crypto.createHash('md5').update(req.body.content+cryptoRandomString
 			}else{
 				res.send({
 					status: "OK",
-					id: postid,
-					parent: req.body.parent,
-					media: req.body.media
+					id: postid
 				})
 			}
 		})

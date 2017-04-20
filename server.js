@@ -1287,6 +1287,7 @@ app.get('/media/:id',function(req,res){
 				error: "no item found"
 			})
 		}else{
+			res.writeHead(200,{'content-type': 'image/png'});
 			res.write(new Buffer(result.rows[0].content), 'binary');
 			res.end();
 		}

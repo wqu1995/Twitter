@@ -1055,7 +1055,8 @@ console.log("in delete item")
 			})
 		}else{
 			if(result.length!=0){
-				chan.publish(exchange, 'chicken', new Buffer(result[0].media));
+				console.log(result[0])
+				chan.publish(exchange, 'chicken', new Buffer(result[0].media.toString()));
 			}
 		}
 	})

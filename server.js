@@ -1058,7 +1058,7 @@ app.delete('/item/:id',function(req,res){
 		}else{
 			if(result.length!=0 && result[0].media != null){
 			//	console.log("[\""+result[0].media.toString()+"\"]")
-				chan.publish(exchange, 'chicken', new Buffer("[\""+result[0].media.toString()+"\"]"));
+				chan.publish(exchange, 'chicken', new Buffer(result[0].media.toString()));
 			}
 		}
 	})

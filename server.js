@@ -534,15 +534,15 @@ app.post('/search',function(req,res){
 	var q = req.body.q;
 	var following = req.body.following;
 	var username = req.body.username;
-	console.log("THIS IS USERNAME " + username);
-	console.log("THIS IS Q " + q);
-	console.log("THIS IS following " + following)
-	console.log("THIS IS USERNAME " + username);
+//	console.log("THIS IS USERNAME " + username);
+//	console.log("THIS IS Q " + q);
+//	console.log("THIS IS following " + following)
+//	console.log("THIS IS USERNAME " + username);
 
 	var parent = req.body.parent;
-	console.log("THIS IS PARENT " + parent);
+//	console.log("THIS IS PARENT " + parent);
 	var replies = req.body.replies;
-	console.log("THIS IS REPLIES " + replies);
+//	console.log("THIS IS REPLIES " + replies);
 
 	if (req.body.limit != null && req.body.limit != ""){
 		if(q != null && following == true && username != null){

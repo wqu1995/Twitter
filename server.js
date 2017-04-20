@@ -346,6 +346,14 @@ app.post('/additem', function(req,res){
 	})
 })*/
 //console.log('in add item')
+	if(req.body.content.substring(0,3)=="RT "){
+		connection.query('UPDATE Tweets SET RTCounter = RTCounter + 1 WHERE content LIKE ' + 
+			mysql.escape('%'+req.body.content.substring(3,req.body.content.length)+'%'), function(err,result){
+				if(err){
+					console.log(err);
+				}
+			})
+	}
 var timestamp = Math.floor(dateTime/1000);	
 var postid = crypto.createHash('md5').update(req.body.content+cryptoRandomString(10)).digest('hex');
 		var post;

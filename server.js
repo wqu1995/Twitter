@@ -357,7 +357,7 @@ var postid = crypto.createHash('md5').update(req.body.content+cryptoRandomString
 					username: req.session.user,
 					timestamp: timestamp,
 					parent: req.body.parent,
-					media: "['"+req.body.media.toString()+"']"
+					media: req.body.media.toString()
 				}
 			}
 			else{
@@ -380,7 +380,7 @@ var postid = crypto.createHash('md5').update(req.body.content+cryptoRandomString
 					username: req.session.user,
 					timestamp: timestamp,
 					parent: null,
-					media: "['"+req.body.media.toString()+"']"
+					media: req.body.media.toString()
 				}
 			}
 			else{
@@ -1055,7 +1055,7 @@ app.delete('/item/:id',function(req,res){
 			})
 		}else{
 			if(result.length!=0 && result[0].media != null){
-				console.log(result[0])
+				console.log(result[0].media)
 				chan.publish(exchange, 'chicken', new Buffer(result[0].media.toString()));
 			}
 		}

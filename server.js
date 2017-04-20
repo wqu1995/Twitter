@@ -52,7 +52,7 @@ var connection = mysql.createConnection({
 	host: '54.86.36.12',
 	user: 'root',
 	password: 'cse356',
-	database: 'Twitter'
+	database: 'Twitter2'
 });
 
 /*
@@ -347,12 +347,23 @@ app.post('/additem', function(req,res){
 })*/
 //console.log('in add item')
 	if(req.body.content.substring(0,3)=="RT "){
-		connection.query('UPDATE Tweets SET RTCounter = RTCounter + 1 WHERE content = ' + 
+		connection.query('SELECT id FROM Tweets where content = '+ mysql.escape(req.body.content.substring(3,req.body.content.length)), function(err,result){
+			if(err){
+				console.log("in additem error");
+			}else{
+				connection.query('UPDATE Data SET RTCounter = RTCounter +1 WHERE id = '+mysql.escape(result[0].id),function(err,result){
+					if(err){
+						console.log("in additem error2");
+					}
+				})
+			}
+		})
+		/*connection.query('UPDATE Tweets SET RTCounter = RTCounter + 1 WHERE content = ' + 
 			mysql.escape(req.body.content.substring(3,req.body.content.length)), function(err,result){
 				if(err){
 					console.log(err);
 				}
-			})
+			})*/
 	}
 var timestamp = Math.floor(dateTime/1000);	
 var postid = crypto.createHash('md5').update(req.body.content+cryptoRandomString(10)).digest('hex');
@@ -416,6 +427,11 @@ var postid = crypto.createHash('md5').update(req.body.content+cryptoRandomString
 				res.send({
 					status: "OK",
 					id: postid
+				})
+				connection.query('INSERT INTO Data SET ?', {id: postid},function(err,result){
+					if(err){
+						console.log("in additem error 3");
+					}
 				})
 			}
 		})
@@ -529,7 +545,7 @@ app.post('/searchTweets',function(req,res){
 	})
 })
 app.post('/search',function(req,res){
-	//console.log(req.body);
+	console.log(req.body);
 	var newStamp = req.body.timestamp || dateTime;
 	var q = req.body.q;
 	var following = req.body.following;
@@ -1758,7 +1774,7 @@ app.post('/item/:id/like',function(req,res){
 	//console.log('in here');
 	if(req.body.like == true){
 		//console.log("in true");
-		connection.query('UPDATE Tweets SET LikeCounter = LikeCounter + 1 WHERE id =' + mysql.escape(req.params.id) + ';',function(err,result){
+		connection.query('UPDATE Data SET LikeCounter = LikeCounter + 1 WHERE id =' + mysql.escape(req.params.id) + ';',function(err,result){
 			if(err){
 				var jsonToSend = {
 					status: "error"
@@ -1775,7 +1791,7 @@ app.post('/item/:id/like',function(req,res){
 	}else if(req.body.like == false){
 		console.log("in false");
 
-		connection.query('UPDATE Tweets SET LikeCounter = LikeCounter - 1 WHERE id =' + mysql.escape(req.params.id) + ';',function(err,result){
+		connection.query('UPDATE Data SET LikeCounter = LikeCounter - 1 WHERE id =' + mysql.escape(req.params.id) + ';',function(err,result){
 			if(err){
 				var jsonToSend = {
 					status: "error"

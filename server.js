@@ -500,6 +500,7 @@ app.get('/getAllTweets',function(req,res){
 })
 
 app.post('/searchTweets',function(req,res){
+	console.log(req.body);
 	var newStamp = Number(req.body.timestamp);
 	//console.log("this is time stamp" + newStamp)
 		mongoClient.connect(url,function(err,db){
@@ -1177,9 +1178,9 @@ app.get('/user/:username/following',function(req,res){
 })
 
 app.post('/item/:id/like',function(req,res){
-	console.log('in here');
+	//console.log('in here');
 	if(req.body.like == true){
-		console.log("in true");
+		//console.log("in true");
 		connection.query('UPDATE Tweets SET LikeCounter = LikeCounter + 1 WHERE id =' + mysql.escape(req.params.id) + ';',function(err,result){
 			if(err){
 				var jsonToSend = {

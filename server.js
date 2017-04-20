@@ -539,7 +539,9 @@ app.post('/search',function(req,res){
 //	console.log("THIS IS following " + following)
 //	console.log("THIS IS USERNAME " + username);
 
-	var parent = req.body.parent;
+	if(req.body.parent!= null){
+		var parent = req.body.parent;
+	}
 //	console.log("THIS IS PARENT " + parent);
 	var replies = req.body.replies;
 //	console.log("THIS IS REPLIES " + replies);

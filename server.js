@@ -18,7 +18,7 @@ var amqp = require('amqplib/callback_api');
 var amqpConn, chan;
 var exchange = 'twitter';
 
-amqp.connect('amqp://test:test@54.227.232.158', function(err,conn){
+amqp.connect('amqp://test:test@54.234.28.240', function(err,conn){
 	amqpConn = conn;
 	chan = conn.createChannel(function(err,ch){
 		ch.assertExchange('twitter', 'direct');
@@ -27,7 +27,7 @@ amqp.connect('amqp://test:test@54.227.232.158', function(err,conn){
 })
 
 var cassandraClient = new cassandra.Client({
-	contactPoints: ['54.227.232.158'],
+	contactPoints: ['54.234.28.240'],
 	keyspace: 'twitter'
 },function(err){
 	if(err)
@@ -49,7 +49,7 @@ mongoClient.connect(url,function(err,db){
 
 
 var connection = mysql.createConnection({
-	host: '54.86.36.12',
+	host: '52.87.157.232',
 	user: 'root',
 	password: 'cse356',
 	database: 'Twitter2'
@@ -346,7 +346,7 @@ app.post('/additem', function(req,res){
 	})
 })*/
 //console.log('in add item')
-	if(req.body.content.substring(0,3)=="RT "){
+/*	if(req.body.content.substring(0,3)=="RT "){
 		connection.query('SELECT id FROM Tweets where content = '+ mysql.escape(req.body.content.substring(3,req.body.content.length)), function(err,result){
 			if(err){
 				console.log("in additem error");
@@ -363,8 +363,8 @@ app.post('/additem', function(req,res){
 				if(err){
 					console.log(err);
 				}
-			})*/
-	}
+			})
+	}*/
 var timestamp = Math.floor(dateTime/1000);	
 var postid = crypto.createHash('md5').update(req.body.content+cryptoRandomString(10)).digest('hex');
 		var post;
@@ -544,7 +544,306 @@ app.post('/searchTweets',function(req,res){
 
 	})
 })
-app.post('/search',function(req,res){
+ app.post('/search',function(req,res){
+ console.log(req.body);
+ var newStamp = req.body.timestamp || dateTime;
+ var q = req.body.q;
+ var following = req.body.following;
+ var username = req.body.username;
+ if (req.body.limit != null && req.body.limit != ""){
+ if(q != null && following == true && username != null){
+ res.send({
+ status: "OK",
+ items: []
+ })
+ }
+ else if(q != null && following == true && username == null){
+ connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
+ ' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
+ mysql.escape(req.body.limit), function(err, result){
+ if(err){
+ console.log("472")
+ res.send({
+ status: "error",
+ error: err
+ })
+ }else{
+ var response = {
+ status: "OK",
+ items: []
+ }
+ for(var i = 0; i< result.length; i++){
+ response.items.push(JSON.parse(JSON.stringify(result[i])))
+ }
+ res.send(response);
+ }
+ })
+ }
+ else if(q != null && following ==false && username != null){
+ connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
+ ' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
+ mysql.escape(req.body.limit), function(err, result){
+ if(err){
+ console.log("494")
+ 
+ res.send({
+ status: "error",
+ error: err
+ })
+ }else{
+ var response = {
+ status: "OK",
+ items: []
+ }
+ for(var i = 0; i< result.length; i++){
+ response.items.push(JSON.parse(JSON.stringify(result[i])))
+ }
+ res.send(response);
+ }
+ })
+ }
+ else if(q != null && following ==false && username == null){
+ connection.query('SELECT * FROM Tweets WHERE content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
+ mysql.escape(req.body.limit), function(err, result){
+ if(err){
+ console.log("516")
+ 
+ res.send({
+ status: "error",
+ error: err
+ })
+ }else{
+ var response = {
+ status: "OK",
+ items: []
+ }
+ for(var i = 0; i< result.length; i++){
+ response.items.push(JSON.parse(JSON.stringify(result[i])))
+ }
+ res.send(response);
+ }
+ })
+ }
+ else if(q == null && following != null && username != null){
+ res.send({
+ status: "OK",
+ items: []
+ })
+ }
+ else if(q == null && following == true && username == null){
+ connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
+ mysql.escape(req.body.limit), function(err, result){
+ if(err){
+ console.log("545")
+ 
+ res.send({
+ status: "error",
+ error: err
+ })
+ }else{
+ var response = {
+ status: "OK",
+ items: []
+ }
+ for(var i = 0; i< result.length; i++){
+ response.items.push(JSON.parse(JSON.stringify(result[i])))
+ }
+ res.send(response);
+ }
+ })
+ }
+ else if(q == null && following == false && username != null){
+ connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
+ mysql.escape(req.body.limit), function(err, result){
+ if(err){
+ console.log("568")
+ 
+ res.send({
+ status: "error",
+ error: err
+ })
+ }else{
+ var response = {
+ status: "OK",
+ items: []
+ }
+ for(var i = 0; i< result.length; i++){
+ response.items.push(JSON.parse(JSON.stringify(result[i])))
+ }
+ res.send(response);
+ }
+ })
+ }
+ else if(q == null && following ==false && username == null){
+ connection.query('SELECT * FROM Tweets WHERE timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +mysql.escape(req.body.limit), function(err, result){
+ if(err){
+ console.log("590")
+ 
+ res.send({
+ status: "error",
+ error: err
+ })
+ }else{
+ var response = {
+ status: "OK",
+ items: []
+ }
+ for(var i = 0; i< result.length; i++){
+ response.items.push(JSON.parse(JSON.stringify(result[i])))
+ }
+ res.send(response);
+ }
+ })
+ }
+ }else{
+ if(q != null && following == true && username != null){
+ res.send({
+ status: "OK",
+ items: []
+ })
+ }
+ else if(q != null && following == true && username == null){
+ connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
+ ' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+ if(err){
+ console.log("619")
+ 
+ res.send({
+ status: "error",
+ error: err
+ })
+ }else{
+ var response = {
+ status: "OK",
+ items: []
+ }
+ for(var i = 0; i< result.length; i++){
+ response.items.push(JSON.parse(JSON.stringify(result[i])))
+ }
+ res.send(response);
+ }
+ })
+ }
+ else if(q != null && following ==false && username != null){
+ connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
+ ' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+ if(err){
+ console.log("641")
+ 
+ res.send({
+ status: "error",
+ error: err
+ })
+ }else{
+ var response = {
+ status: "OK",
+ items: []
+ }
+ for(var i = 0; i< result.length; i++){
+ response.items.push(JSON.parse(JSON.stringify(result[i])))
+ }
+ res.send(response);
+ }
+ })
+ }
+ else if(q != null && following ==false && username == null){
+ connection.query('SELECT * FROM Tweets WHERE content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+ if(err){
+ console.log("662")
+ 
+ res.send({
+ status: "error",
+ error: err
+ })
+ }else{
+ var response = {
+ status: "OK",
+ items: []
+ }
+ for(var i = 0; i< result.length; i++){
+ response.items.push(JSON.parse(JSON.stringify(result[i])))
+ }
+ res.send(response);
+ }
+ })
+ }
+ else if(q == null && following != null && username != null){
+ res.send({
+ status: "OK",
+ items: []
+ })
+ }
+ else if(q == null && following == true && username == null){
+ connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+ if(err){
+ console.log("690")
+ 
+ res.send({
+ status: "error",
+ error: err
+ })
+ }else{
+ var response = {
+ status: "OK",
+ items: []
+ }
+ for(var i = 0; i< result.length; i++){
+ response.items.push(JSON.parse(JSON.stringify(result[i])))
+ }
+ res.send(response);
+ }
+ })
+ }
+ else if(q == null && following == false && username != null){
+ connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+ if(err){
+ console.log("712")
+ 
+ res.send({
+ status: "error",
+ error: err
+ })
+ }else{
+ var response = {
+ status: "OK",
+ items: []
+ }
+ for(var i = 0; i< result.length; i++){
+ response.items.push(JSON.parse(JSON.stringify(result[i])))
+ }
+ res.send(response);
+ }
+ })
+ }
+ else if(q == null && following ==false && username == null){
+ connection.query('SELECT * FROM Tweets timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+ if(err){
+ console.log("733")
+ 
+ res.send({
+ status: "error",
+ error: err
+ })
+ }else{
+ var response = {
+ status: "OK",
+ items: []
+ }
+ for(var i = 0; i< result.length; i++){
+ response.items.push(JSON.parse(JSON.stringify(result[i])))
+ }
+ res.send(response);
+ }
+ })
+ }
+ 
+ }
+})
+app.post('/searchNew',function(req,res){
 	console.log(req.body);
 	var newStamp = req.body.timestamp || dateTime;
 	var q = req.body.q;

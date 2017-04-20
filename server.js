@@ -1825,8 +1825,6 @@ app.post('/follow',function(req,res){
 		})
 	}
 })
-/*
-=======
 
 app.post('/addmedia', function(req,res){
 	var id = crypto.createHash('md5').update(req.files.content.name+cryptoRandomString(10)).digest('hex');
@@ -1870,12 +1868,7 @@ app.get('/media/:id',function(req,res){
 	})
 })
 
->>>>>>> 9d09ef7fb6276baf3a3fb748e16ab0b910b91f9a
+
 app.listen(8080, "172.31.64.118",function(){
 	console.log("Server listening on port " + 9000);
-})*/
-
-
-app.listen(9000,"0.0.0.0",function(){
-	console.log("server listening on port " + 9000);
 })

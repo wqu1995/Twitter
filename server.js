@@ -1192,7 +1192,7 @@ app.post('/search',function(req,res){
 				items: []
 			})
 		}
-		else if(q == null && following == true && username == null && parent == null && (replies == false || replies == null){
+		else if(q == null && following == true && username == null && parent == null && (replies == false || replies == null)){
 			connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
 				' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
@@ -1825,7 +1825,6 @@ app.post('/follow',function(req,res){
 		})
 	}
 })
-<<<<<<< HEAD
 /*
 =======
 

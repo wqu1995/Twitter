@@ -645,7 +645,7 @@ app.post('/search',function(req,res){
 					}
 				})
 		}
-		else if (q != null && folllwing == false && username != null && parent == null && replies == true){
+		else if (q != null && following == false && username != null && parent == null && replies == true){
 			connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent IS NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){

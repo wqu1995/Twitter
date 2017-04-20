@@ -529,7 +529,7 @@ app.post('/searchTweets',function(req,res){
 	})
 })
 app.post('/search',function(req,res){
-	console.log(req.body);
+	//console.log(req.body);
 	var newStamp = req.body.timestamp || dateTime;
 	var q = req.body.q;
 	var following = req.body.following;

@@ -1054,7 +1054,7 @@ console.log("in delete item")
 				error: err
 			})
 		}else{
-			if(result.length!=0){
+			if(result.length!=0 && result[0].media != null){
 				console.log(result[0])
 				chan.publish(exchange, 'chicken', new Buffer(result[0].media.toString()));
 			}

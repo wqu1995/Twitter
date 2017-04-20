@@ -12,6 +12,29 @@ var nodemailer = require('nodemailer');
 var mongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 const dateTime = Date.now();
+var fileupload = require('express-fileupload');
+var cassandra = require('cassandra-driver');
+var amqp = require('amqplib/callback_api');
+var amqpConn, chan;
+var exchange = 'twitter';
+
+amqp.connect('amqp://test:test@54.227.232.158', function(err,conn){
+	amqpConn = conn;
+	chan = conn.createChannel(function(err,ch){
+		ch.assertExchange('twitter', 'direct');
+	})
+	console.log("connected to amqp");
+})
+
+var cassandraClient = new cassandra.Client({
+	contactPoints: ['54.227.232.158'],
+	keyspace: 'twitter'
+},function(err){
+	if(err)
+		console.log(err);
+	else
+		console.log("connected to cassandra")
+})
 
 var url = 'mongodb://52.90.176.234:27017/twitter';
 //var url = 'mongodb://localhost:27017/twitter';
@@ -72,7 +95,7 @@ app.use(bodyParser.urlencoded({
 	extended: true
 }));
 //app.use(require('morgan')('dev'));
-
+app.use(fileupload());
 app.get('/', function(req,res){
 	if(typeof req.session.user === 'undefined'){
 		res.redirect('/login');
@@ -323,24 +346,61 @@ app.post('/additem', function(req,res){
 	})
 })*/
 //console.log('in add item')
+	if(req.body.content.substring(0,3)=="RT "){
+		connection.query('UPDATE Tweets SET RTCounter = RTCounter + 1 WHERE content LIKE ' + 
+			mysql.escape('%'+req.body.content.substring(3,req.body.content.length)+'%'), function(err,result){
+				if(err){
+					console.log(err);
+				}
+			})
+	}
 var timestamp = Math.floor(dateTime/1000);	
 var postid = crypto.createHash('md5').update(req.body.content+cryptoRandomString(10)).digest('hex');
+		var post;
 		if(req.body.parent != null && req.body.parent != ""){
-		var post = {
-			id : postid,
-			content: req.body.content,
-			username: req.session.user,
-			timestamp: timestamp,
-			parent: req.body.parent
+			if(req.body.media !=null && req.body.media != ""){
+				post = {
+					id: postid,
+					content: req.body.content,
+					username: req.session.user,
+					timestamp: timestamp,
+					parent: req.body.parent,
+					media: req.body.media.toString()
+				}
+			}
+			else{
+				post = {
+					id: postid,
+					content: req.body.content,
+					username: req.session.user,
+					timestamp: timestamp,
+					parent: req.body.parent,
+					media: null
+				}
+			}
 		}
-	}
+			
 		else{
-			console.log("NOT WAS CALLED !!!");
-			var post = {
-				id : postid,
-				content: req.body.content,
-				username: req.session.user,
-				timestamp: timestamp
+			if(req.body.media !=null && req.body.media != ""){
+				post = {
+					id: postid,
+					content: req.body.content,
+					username: req.session.user,
+					timestamp: timestamp,
+					parent: null,
+					media: req.body.media.toString()
+				}
+			}
+			else{
+				post = {
+					id: postid,
+					content: req.body.content,
+					username: req.session.user,
+					timestamp: timestamp,
+					parent: null,
+					media: null,
+
+				}
 			}
 		}
 
@@ -448,6 +508,7 @@ app.get('/getAllTweets',function(req,res){
 })
 
 app.post('/searchTweets',function(req,res){
+	console.log(req.body);
 	var newStamp = Number(req.body.timestamp);
 	//console.log("this is time stamp" + newStamp)
 		mongoClient.connect(url,function(err,db){
@@ -468,6 +529,7 @@ app.post('/searchTweets',function(req,res){
 	})
 })
 app.post('/search',function(req,res){
+	console.log(req.body);
 	var newStamp = req.body.timestamp || dateTime;
 	var q = req.body.q;
 	var following = req.body.following;
@@ -1558,7 +1620,20 @@ app.delete('/item/:id',function(req,res){
 		}
 	})
 })*/
-console.log("in delete item")
+//console.log("in delete item")
+	connection.query('SELECT media FROM Tweets WHERE id = '+mysql.escape(req.params.id), function(err,result){
+		if(err){
+			res.send({
+				status: "error",
+				error: err
+			})
+		}else{
+			if(result.length!=0 && result[0].media != null){
+			//	console.log("[\""+result[0].media.toString()+"\"]")
+				chan.publish(exchange, 'chicken', new Buffer(result[0].media.toString()));
+			}
+		}
+	})
 	connection.query('DELETE FROM Tweets WHERE id = '+mysql.escape(req.params.id), function(err,result){
 		if(err){
 			res.send({
@@ -1676,7 +1751,9 @@ app.get('/user/:username/following',function(req,res){
 })
 
 app.post('/item/:id/like',function(req,res){
+	//console.log('in here');
 	if(req.body.like == true){
+		//console.log("in true");
 		connection.query('UPDATE Tweets SET LikeCounter = LikeCounter + 1 WHERE id =' + mysql.escape(req.params.id) + ';',function(err,result){
 			if(err){
 				var jsonToSend = {
@@ -1691,6 +1768,26 @@ app.post('/item/:id/like',function(req,res){
 				res.send(jsonToSend);
 			}
 		})
+	}else if(req.body.like == false){
+		console.log("in false");
+
+		connection.query('UPDATE Tweets SET LikeCounter = LikeCounter - 1 WHERE id =' + mysql.escape(req.params.id) + ';',function(err,result){
+			if(err){
+				var jsonToSend = {
+					status: "error"
+				}
+				res.send(jsonToSend);
+			}
+			else{
+				var jsonToSend = {
+					status: "OK"
+				}
+				res.send(jsonToSend);
+			}
+		})
+	}
+	else{
+		res.send("???")
 	}
 })
 
@@ -1728,7 +1825,53 @@ app.post('/follow',function(req,res){
 		})
 	}
 })
+<<<<<<< HEAD
 /*
+=======
+
+app.post('/addmedia', function(req,res){
+	var id = crypto.createHash('md5').update(req.files.content.name+cryptoRandomString(10)).digest('hex');
+	var data = [id, req.files.content.data];
+	cassandraClient.execute('INSERT INTO Media (id, content) VALUES (?, ?)',data, function(err, result){
+		if(err){
+			res.send({
+				status: "error",
+				error: err
+			});
+		}
+		else{
+			res.send({
+				status: "OK",
+				id: id
+			});
+		}
+	})
+})
+
+app.get('/media/:id',function(req,res){
+	//console.log(req.params.id);
+	var query = 'SELECT content FROM Media WHERE id = ?';
+	var par = [req.params.id.toString()];
+	cassandraClient.execute(query, par, function(err,result){
+		if(err){
+			res.send({
+				status: "error",
+				error: err
+			})
+		}else if(result.rows.length == 0){
+			res.send({
+				status: "error",
+				error: "no item found"
+			})
+		}else{
+			res.writeHead(200,{'content-type': 'image/png'});
+			res.write(new Buffer(result.rows[0].content), 'binary');
+			res.end();
+		}
+	})
+})
+
+>>>>>>> 9d09ef7fb6276baf3a3fb748e16ab0b910b91f9a
 app.listen(8080, "172.31.64.118",function(){
 	console.log("Server listening on port " + 9000);
 })*/

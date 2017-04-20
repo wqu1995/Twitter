@@ -521,6 +521,7 @@ app.post('/searchTweets',function(req,res){
 	})
 })
 app.post('/search',function(req,res){
+	console.log(req.body);
 	var newStamp = req.body.timestamp || dateTime;
 	var q = req.body.q;
 	var following = req.body.following;
@@ -1056,7 +1057,7 @@ app.delete('/item/:id',function(req,res){
 			})
 		}else{
 			if(result.length!=0 && result[0].media != null){
-				console.log("[\""+result[0].media.toString()+"\"]")
+			//	console.log("[\""+result[0].media.toString()+"\"]")
 				chan.publish(exchange, 'chicken', new Buffer("[\""+result[0].media.toString()+"\"]"));
 			}
 		}

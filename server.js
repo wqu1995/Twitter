@@ -524,7 +524,7 @@ app.get('/getAllTweets',function(req,res){
 })
 
 app.post('/searchTweets',function(req,res){
-	console.log(req.body);
+	//console.log(req.body);
 	var newStamp = Number(req.body.timestamp);
 	//console.log("this is time stamp" + newStamp)
 		mongoClient.connect(url,function(err,db){
@@ -545,7 +545,7 @@ app.post('/searchTweets',function(req,res){
 	})
 })
  app.post('/search',function(req,res){
- 	console.log(req.body);
+ 	//console.log(req.body);
  	var newStamp = req.body.timestamp || dateTime;
  	var q = req.body.q;
  	var following = req.body.following;
@@ -844,7 +844,7 @@ app.post('/searchTweets',function(req,res){
  	}
  })
 app.post('/searchNew',function(req,res){
-	console.log(req.body);
+	//console.log(req.body);
 	var newStamp = req.body.timestamp || dateTime;
 	var q = req.body.q;
 	var following = req.body.following;
@@ -1362,7 +1362,7 @@ app.post('/searchNew',function(req,res){
 		}
 
 		else if(q != null && following ==false && username != null && parent == null  && (replies == false || replies == null)){
-			console.log("SEARCH HEREEEEEEEEEEEEEE");
+			//console.log("SEARCH HEREEEEEEEEEEEEEE");
 			connection.query('SELECT * FROM Tweets WHERE username = ' + mysql.escape(username)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
@@ -1379,7 +1379,7 @@ app.post('/searchNew',function(req,res){
 							items: []
 						}
 						for(var i = 0; i< result.length; i++){
-							console.log("LMAO");
+							//console.log("LMAO");
 							response.items.push(JSON.parse(JSON.stringify(result[i])))
 							if(i == result.length -1){
 								console.log("OKAY!!!");

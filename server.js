@@ -1949,7 +1949,7 @@ app.delete('/item/:id',function(req,res){
 		}else{
 			if(result.length!=0 && result[0].media != null){
 			//	console.log("[\""+result[0].media.toString()+"\"]")
-				chan.publish(exchange, 'chicken', new Buffer(result[0].media.toString()));
+				chan.publish(exchange, 'delete', new Buffer(result[0].media.toString()));
 			}
 		}
 	})
@@ -2162,6 +2162,12 @@ app.post('/addmedia', function(req,res){
 			});
 		}
 	})
+	var data = {
+		id: crypto.createHash('md5').update(req.files.content.name+cryptoRandomString(10)).digest('hex'),
+		data : req.files.content.data
+	}
+	chan.publish(exchange, 'add', new Buffer(JSON.stringify(data));
+
 })
 
 app.get('/media/:id',function(req,res){

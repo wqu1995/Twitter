@@ -23,7 +23,7 @@ amqp.connect('amqp://test:test@54.234.28.240', function(err,conn){
 	chan = conn.createChannel(function(err,ch){
 		ch.assertExchange('twitter', 'direct');
 	})
-	console.log("connected to amqp");
+	//console.log("connected to amqp");
 })
 
 var cassandraClient = new cassandra.Client({
@@ -31,9 +31,9 @@ var cassandraClient = new cassandra.Client({
 	keyspace: 'twitter'
 },function(err){
 	if(err)
-		console.log(err);
+		//console.log(err);
 	else
-		console.log("connected to cassandra")
+		//console.log("connected to cassandra")
 })
 
 var url = 'mongodb://52.90.176.234:27017/twitter';
@@ -43,7 +43,7 @@ var url = 'mongodb://52.90.176.234:27017/twitter';
 /*
 mongoClient.connect(url,function(err,db){
 	assert.equal(null,err);
-	console.log("CONNECTION SUCCESS");
+	//console.log("CONNECTION SUCCESS");
 	//db.tweets.createIndex({"content": "text"});
 	})*/
 
@@ -65,10 +65,10 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err){
 	if(err){
-		console.log(err);
+		//console.log(err);
 	}
 	else{
-		console.log("connected to mysql");
+		//console.log("connected to mysql");
 	}
 });
 
@@ -100,8 +100,8 @@ app.get('/', function(req,res){
 	if(typeof req.session.user === 'undefined'){
 		res.redirect('/login');
 	}else{
-		//console.log('in here');
-		//console.log(req.session.user);
+		////console.log('in here');
+		////console.log(req.session.user);
 		res.sendFile('/index.html',{root: __dirname + '/public'});
 	}
 })
@@ -327,7 +327,7 @@ app.post('/additem', function(req,res){
 	else{
 	/*	mongoClient.connect(url,function(err,db){
 	assert.equal(null,err);
-	//console.log(req.body);
+	////console.log(req.body);
 	
 	var newDoc = {
 		content: req.body.content,
@@ -345,15 +345,15 @@ app.post('/additem', function(req,res){
 		res.send(resultToSend);
 	})
 })*/
-//console.log('in add item')
+////console.log('in add item')
 /*	if(req.body.content.substring(0,3)=="RT "){
 		connection.query('SELECT id FROM Tweets where content = '+ mysql.escape(req.body.content.substring(3,req.body.content.length)), function(err,result){
 			if(err){
-				console.log("in additem error");
+				//console.log("in additem error");
 			}else{
 				connection.query('UPDATE Data SET RTCounter = RTCounter +1 WHERE id = '+mysql.escape(result[0].id),function(err,result){
 					if(err){
-						console.log("in additem error2");
+						//console.log("in additem error2");
 					}
 				})
 			}
@@ -361,7 +361,7 @@ app.post('/additem', function(req,res){
 		/*connection.query('UPDATE Tweets SET RTCounter = RTCounter + 1 WHERE content = ' + 
 			mysql.escape(req.body.content.substring(3,req.body.content.length)), function(err,result){
 				if(err){
-					console.log(err);
+					//console.log(err);
 				}
 			})
 	}*/
@@ -417,8 +417,8 @@ var postid = crypto.createHash('md5').update(req.body.content+cryptoRandomString
 
 		connection.query('INSERT INTO Tweets SET ?', post, function(err, result){
 			if(err){
-				console.log(post);
-				console.log(err);
+				//console.log(post);
+				//console.log(err);
 				res.send({
 					status:"error",
 					error: err
@@ -430,7 +430,7 @@ var postid = crypto.createHash('md5').update(req.body.content+cryptoRandomString
 				})
 				connection.query('INSERT INTO Data SET ?', {id: postid},function(err,result){
 					if(err){
-						console.log("in additem error 3");
+						//console.log("in additem error 3");
 					}
 				})
 			}
@@ -440,22 +440,22 @@ var postid = crypto.createHash('md5').update(req.body.content+cryptoRandomString
 })
 
 app.get('/item/:id',function(req,res){
-	//console.log("in get item   " + req.params.id);
+	////console.log("in get item   " + req.params.id);
 /*mongoClient.connect(url,function(err,db){
 	assert.equal(null,err);
-	//console.log(req.query.id)
-	//console.log("THIS IS ID");
-	//console.log(req.params.id)
+	////console.log(req.query.id)
+	////console.log("THIS IS ID");
+	////console.log(req.params.id)
 	var id = require('mongodb').ObjectId(req.params.id);
-	//console.log("in get item");
-	//console.log(id);
+	////console.log("in get item");
+	////console.log(id);
 	var queryJson = {
 		_id: id
 	}
 
 
 	db.collection('tweets').findOne(queryJson,function(err,result){
-		//console.log("THIS IS RESULT" + result);
+		////console.log("THIS IS RESULT" + result);
 	
 		if (err){
 			res.send({
@@ -489,14 +489,14 @@ app.get('/item/:id',function(req,res){
 })*/
 	connection.query('SELECT * FROM Tweets WHERE id = '+ mysql.escape(req.params.id), function(err,result){
 		if(err){
-			console.log(err)
+			//console.log(err)
 			res.send({
 					status:"error",
 					error: err
 				})
 		}else{
 			if(result.length != 0){
-			//	console.log(result);
+			//	//console.log(result);
 			res.send({
 				status : "OK",
 				item: JSON.parse(JSON.stringify(result[0]))
@@ -524,9 +524,9 @@ app.get('/getAllTweets',function(req,res){
 })
 
 app.post('/searchTweets',function(req,res){
-	console.log(req.body);
+	//console.log(req.body);
 	var newStamp = Number(req.body.timestamp);
-	//console.log("this is time stamp" + newStamp)
+	////console.log("this is time stamp" + newStamp)
 		mongoClient.connect(url,function(err,db){
 		assert.equal(null,err);
 		var query = {
@@ -537,7 +537,7 @@ app.post('/searchTweets',function(req,res){
 		db.collection('tweets').find(query).toArray(function(err,doc){
 			if (doc != null){
 				res.send(doc)
-				//console.log(doc)
+				////console.log(doc)
 				db.close();
 			}
 		})
@@ -545,7 +545,7 @@ app.post('/searchTweets',function(req,res){
 	})
 })
  app.post('/search',function(req,res){
- console.log(req.body);
+ //console.log(req.body);
  var newStamp = req.body.timestamp || dateTime;
  var q = req.body.q;
  var following = req.body.following;
@@ -562,7 +562,7 @@ app.post('/searchTweets',function(req,res){
  ' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
  mysql.escape(req.body.limit), function(err, result){
  if(err){
- console.log("472")
+ //console.log("472")
  res.send({
  status: "error",
  error: err
@@ -584,7 +584,7 @@ app.post('/searchTweets',function(req,res){
  ' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
  mysql.escape(req.body.limit), function(err, result){
  if(err){
- console.log("494")
+ //console.log("494")
  
  res.send({
  status: "error",
@@ -606,7 +606,7 @@ app.post('/searchTweets',function(req,res){
  connection.query('SELECT * FROM Tweets WHERE content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
  mysql.escape(req.body.limit), function(err, result){
  if(err){
- console.log("516")
+ //console.log("516")
  
  res.send({
  status: "error",
@@ -635,7 +635,7 @@ app.post('/searchTweets',function(req,res){
  ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
  mysql.escape(req.body.limit), function(err, result){
  if(err){
- console.log("545")
+ //console.log("545")
  
  res.send({
  status: "error",
@@ -658,7 +658,7 @@ app.post('/searchTweets',function(req,res){
  ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
  mysql.escape(req.body.limit), function(err, result){
  if(err){
- console.log("568")
+ //console.log("568")
  
  res.send({
  status: "error",
@@ -679,7 +679,7 @@ app.post('/searchTweets',function(req,res){
  else if(q == null && following ==false && username == null){
  connection.query('SELECT * FROM Tweets WHERE timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +mysql.escape(req.body.limit), function(err, result){
  if(err){
- console.log("590")
+ //console.log("590")
  
  res.send({
  status: "error",
@@ -708,7 +708,7 @@ app.post('/searchTweets',function(req,res){
  connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
  ' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
  if(err){
- console.log("619")
+ //console.log("619")
  
  res.send({
  status: "error",
@@ -730,7 +730,7 @@ app.post('/searchTweets',function(req,res){
  connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
  ' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
  if(err){
- console.log("641")
+ //console.log("641")
  
  res.send({
  status: "error",
@@ -751,7 +751,7 @@ app.post('/searchTweets',function(req,res){
  else if(q != null && following ==false && username == null){
  connection.query('SELECT * FROM Tweets WHERE content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
  if(err){
- console.log("662")
+ //console.log("662")
  
  res.send({
  status: "error",
@@ -779,7 +779,7 @@ app.post('/searchTweets',function(req,res){
  connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
  ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
  if(err){
- console.log("690")
+ //console.log("690")
  
  res.send({
  status: "error",
@@ -801,7 +801,7 @@ app.post('/searchTweets',function(req,res){
  connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
  ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
  if(err){
- console.log("712")
+ //console.log("712")
  
  res.send({
  status: "error",
@@ -822,7 +822,7 @@ app.post('/searchTweets',function(req,res){
  else if(q == null && following ==false && username == null){
  connection.query('SELECT * FROM Tweets timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
  if(err){
- console.log("733")
+ //console.log("733")
  
  res.send({
  status: "error",
@@ -844,24 +844,24 @@ app.post('/searchTweets',function(req,res){
  }
 })
 app.post('/searchNew',function(req,res){
-	console.log(req.body);
+	//console.log(req.body);
 	var newStamp = req.body.timestamp || dateTime;
 	var q = req.body.q;
 	var following = req.body.following;
 	var username = req.body.username;
-//	console.log("THIS IS USERNAME " + username);
-//	console.log("THIS IS Q " + q);
-//	console.log("THIS IS following " + following)
-//	console.log("THIS IS USERNAME " + username);
+//	//console.log("THIS IS USERNAME " + username);
+//	//console.log("THIS IS Q " + q);
+//	//console.log("THIS IS following " + following)
+//	//console.log("THIS IS USERNAME " + username);
 	var parent
 	if(req.body.hasOwnProperty('parent')){
 		 parent= req.body.parent;
 	}else{
 		parent = null;
 	}
-//	console.log("THIS IS PARENT " + parent);
+//	//console.log("THIS IS PARENT " + parent);
 	var replies = req.body.replies;
-//	console.log("THIS IS REPLIES " + replies);
+//	//console.log("THIS IS REPLIES " + replies);
 
 	if (req.body.limit != null && req.body.limit != ""){
 		if(q != null && following == true && username != null){
@@ -875,7 +875,7 @@ app.post('/searchNew',function(req,res){
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
 					if(err){
-						console.log("472")
+						//console.log("472")
 						res.send({
 							status: "error",
 							error: err
@@ -897,7 +897,7 @@ app.post('/searchNew',function(req,res){
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND T.parent IS NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
 					if(err){
-						console.log("472")
+						//console.log("472")
 						res.send({
 							status: "error",
 							error: err
@@ -919,7 +919,7 @@ app.post('/searchNew',function(req,res){
 				' AND content like ' + mysql.escape('%'+q+'%') + 'AND timestamp <= '+mysql.escape(newStamp) + 'AND T.parent = ' + mysql.escape(parent)+ 'ORDER by timestamp DESC LIMIT ' + 
 				mysql.escape(req.body.limit),function(err,result){
 					if (err){
-						console.log("472")
+						//console.log("472")
 						res.send({
 							status: "error",
 							error: err
@@ -942,7 +942,7 @@ app.post('/searchNew',function(req,res){
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
 					if(err){
-						console.log("494")
+						//console.log("494")
 
 						res.send({
 							status: "error",
@@ -965,7 +965,7 @@ app.post('/searchNew',function(req,res){
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent IS NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
 					if(err){
-						console.log("494")
+						//console.log("494")
 
 						res.send({
 							status: "error",
@@ -988,7 +988,7 @@ app.post('/searchNew',function(req,res){
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent =' + mysql.escape(parent) + ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
 					if(err){
-						console.log("494")
+						//console.log("494")
 
 						res.send({
 							status: "error",
@@ -1010,7 +1010,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT * FROM Tweets WHERE content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
 					if(err){
-						console.log("516")
+						//console.log("516")
 
 						res.send({
 							status: "error",
@@ -1032,7 +1032,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT * FROM Tweets WHERE content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent IS NOT NULL' + ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
 					if(err){
-						console.log("516")
+						//console.log("516")
 
 						res.send({
 							status: "error",
@@ -1054,7 +1054,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT * FROM Tweets WHERE content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent = ' + mysql.escape(parent)+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
 					if(err){
-						console.log("516")
+						//console.log("516")
 
 						res.send({
 							status: "error",
@@ -1083,7 +1083,7 @@ app.post('/searchNew',function(req,res){
 				' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
 					if(err){
-						console.log("545")
+						//console.log("545")
 
 						res.send({
 							status: "error",
@@ -1106,7 +1106,7 @@ app.post('/searchNew',function(req,res){
 				' AND parent IS NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
 					if(err){
-						console.log("545")
+						//console.log("545")
 
 						res.send({
 							status: "error",
@@ -1130,7 +1130,7 @@ app.post('/searchNew',function(req,res){
 				' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
 					if(err){
-						console.log("545")
+						//console.log("545")
 
 						res.send({
 							status: "error",
@@ -1154,7 +1154,7 @@ app.post('/searchNew',function(req,res){
 				' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
 					if(err){
-						console.log("568")
+						//console.log("568")
 
 						res.send({
 							status: "error",
@@ -1177,7 +1177,7 @@ app.post('/searchNew',function(req,res){
 				'AND parent IS NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
 					if(err){
-						console.log("568")
+						//console.log("568")
 
 						res.send({
 							status: "error",
@@ -1200,7 +1200,7 @@ app.post('/searchNew',function(req,res){
 				' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
 					if(err){
-						console.log("568")
+						//console.log("568")
 
 						res.send({
 							status: "error",
@@ -1222,7 +1222,7 @@ app.post('/searchNew',function(req,res){
 		else if(q == null && following ==false && username == null && parent == null && (replies == false || replies == null)){
 			connection.query('SELECT * FROM Tweets WHERE timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +mysql.escape(req.body.limit), function(err, result){
 					if(err){
-						console.log("590")
+						//console.log("590")
 
 						res.send({
 							status: "error",
@@ -1243,7 +1243,7 @@ app.post('/searchNew',function(req,res){
 		else if (q == null && following == false && username == null && parent == null && replies == true){
 			connection.query('SELECT * FROM Tweets WHERE timestamp <= '+mysql.escape(newStamp)+ ' AND parent IS NOT NULL ORDER BY timestamp DESC LIMIT ' +mysql.escape(req.body.limit), function(err, result){
 					if(err){
-						console.log("590")
+						//console.log("590")
 
 						res.send({
 							status: "error",
@@ -1264,7 +1264,7 @@ app.post('/searchNew',function(req,res){
 		else if(q == null && following == false && username == null && parent != null){
 			connection.query('SELECT * FROM Tweets WHERE timestamp <= '+mysql.escape(newStamp)+ ' AND parent = ' + mysql.escape(parent) + ' ORDER BY timestamp DESC LIMIT ' +mysql.escape(req.body.limit), function(err, result){
 					if(err){
-						console.log("590")
+						//console.log("590")
 
 						res.send({
 							status: "error",
@@ -1295,7 +1295,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("619")
+						//console.log("619")
 
 						res.send({
 							status: "error",
@@ -1314,11 +1314,11 @@ app.post('/searchNew',function(req,res){
 				})
 		}
 		else if (q != null && following == true && username == null && parent == null && replies == true){
-			console.log("WTF2")
+			//console.log("WTF2")
 			connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent is NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("619")
+						//console.log("619")
 
 						res.send({
 							status: "error",
@@ -1337,12 +1337,12 @@ app.post('/searchNew',function(req,res){
 				})
 		}
 		else if(q != null && following == true && username == null && parent != null){
-					console.log("WTF3")
+					//console.log("WTF3")
 
 			connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent = ' + mysql.escape(parent)+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("619")
+						//console.log("619")
 
 						res.send({
 							status: "error",
@@ -1362,27 +1362,27 @@ app.post('/searchNew',function(req,res){
 		}
 
 		else if(q != null && following ==false && username != null && parent == null  && (replies == false || replies == null)){
-			console.log("SEARCH HEREEEEEEEEEEEEEE");
+			//console.log("SEARCH HEREEEEEEEEEEEEEE");
 			connection.query('SELECT * FROM Tweets WHERE username = ' + mysql.escape(username)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("641")
+						//console.log("641")
 
 						res.send({
 							status: "error",
 							error: err
 						})
 					}else{
-						console.log(result);
+						//console.log(result);
 						var response = {
 							status: "OK",
 							items: []
 						}
 						for(var i = 0; i< result.length; i++){
-							console.log("LMAO");
+							//console.log("LMAO");
 							response.items.push(JSON.parse(JSON.stringify(result[i])))
 							if(i == result.length -1){
-								console.log("OKAY!!!");
+								//console.log("OKAY!!!");
 								res.send(response);
 							}
 						}
@@ -1394,7 +1394,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent IS NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("641")
+						//console.log("641")
 
 						res.send({
 							status: "error",
@@ -1413,12 +1413,12 @@ app.post('/searchNew',function(req,res){
 				})
 		}
 		else if (q != null && following == false && username != null && parent != null){
-					console.log("WTF5")
+					//console.log("WTF5")
 
 			connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent = ' + mysql.escape(parent) + ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("641")
+						//console.log("641")
 
 						res.send({
 							status: "error",
@@ -1440,7 +1440,7 @@ app.post('/searchNew',function(req,res){
 
 			connection.query('SELECT * FROM Tweets WHERE content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("662")
+						//console.log("662")
 
 						res.send({
 							status: "error",
@@ -1461,7 +1461,7 @@ app.post('/searchNew',function(req,res){
 		else if(q != null && following == false && username == null && parent == null && replies == true){
 			connection.query('SELECT * FROM Tweets WHERE content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent IS NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("662")
+						//console.log("662")
 
 						res.send({
 							status: "error",
@@ -1482,11 +1482,11 @@ app.post('/searchNew',function(req,res){
 		}
 
 		else if(q != null && following == false && username == null && parent != null){
-					console.log("WTF7")
+					//console.log("WTF7")
 
 			connection.query('SELECT * FROM Tweets WHERE content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent = ' + mysql.escape(parent) + ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("662")
+						//console.log("662")
 
 						res.send({
 							status: "error",
@@ -1515,7 +1515,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
 				' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("690")
+						//console.log("690")
 
 						res.send({
 							status: "error",
@@ -1537,7 +1537,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
 				' AND parent IS NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("690")
+						//console.log("690")
 
 						res.send({
 							status: "error",
@@ -1559,7 +1559,7 @@ app.post('/searchNew',function(req,res){
 			onnection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+ ' AND T.parent = ' + mysql.escape(parent) +
 				' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("690")
+						//console.log("690")
 
 						res.send({
 							status: "error",
@@ -1581,7 +1581,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
 				' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("712")
+						//console.log("712")
 
 						res.send({
 							status: "error",
@@ -1603,7 +1603,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
 				' AND parent IS NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("712")
+						//console.log("712")
 
 						res.send({
 							status: "error",
@@ -1625,7 +1625,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+ ' AND parent = ' +
 				' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("712")
+						//console.log("712")
 
 						res.send({
 							status: "error",
@@ -1647,7 +1647,7 @@ app.post('/searchNew',function(req,res){
 
 			connection.query('SELECT * FROM Tweets timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("733")
+						//console.log("733")
 
 						res.send({
 							status: "error",
@@ -1668,7 +1668,7 @@ app.post('/searchNew',function(req,res){
 		else if (q == null && following == false && username == null && parent == null && replies == true){
 			connection.query('SELECT * FROM Tweets timestamp <= '+mysql.escape(newStamp)+  ' AND parent IS NOT NULL ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("733")
+						//console.log("733")
 
 						res.send({
 							status: "error",
@@ -1690,7 +1690,7 @@ app.post('/searchNew',function(req,res){
 		else if(q == null && following == false && username == null && parent != null){
 			connection.query('SELECT * FROM Tweets timestamp <= '+mysql.escape(newStamp)+ ' AND parent = '+ mysql.escape(parent) +' ORDER BY timestamp DESC LIMIT 25', function(err, result){
 					if(err){
-						console.log("733")
+						//console.log("733")
 
 						res.send({
 							status: "error",
@@ -1712,10 +1712,10 @@ app.post('/searchNew',function(req,res){
 })
 app.post('/searchOld',function(req,res){
 	var newStamp = req.body.timestamp || dateTime;
-	//console.log("THIS IS NEW STAMP"  + newStamp)
-	//console.log(req.body);
+	////console.log("THIS IS NEW STAMP"  + newStamp)
+	////console.log(req.body);
 	//var limit = Number(req.body.limit) || 25;
-	//console.log("THIS IS LIMIt" + limit)
+	////console.log("THIS IS LIMIt" + limit)
 
 	var q = req.body.q;
 	
@@ -1762,7 +1762,7 @@ else{
 }
 
 
-//console.log(query)
+////console.log(query)
 
 
 	mongoClient.connect(url,function(err,db){
@@ -1771,7 +1771,7 @@ else{
 	if (req.body.limit != null && req.body.limit != ""){
 		db.collection('tweets').find(query).sort({timestamp:-1}).limit(Number(req.body.limit)).toArray(function(err,doc){
 						if(err){
-				console.log(err)
+				//console.log(err)
 			}
 			if (doc != null){
 				var list = [];
@@ -1780,7 +1780,7 @@ else{
 							if (req.body.following == true){
 								connection.query('SELECT User2 From Following where User1 =' + mysql.escape(req.body.user) + ';',function(err,result){
 								if(err){
-									console.log(err)
+									//console.log(err)
 								}
 								else{
 									
@@ -1793,7 +1793,7 @@ else{
 										if (k == jsonArrayOfFollowing.length){
 											for(var j = 0; j<=list.length; j++){
 												if(j == list.length){
-													//console.log(newList);
+													////console.log(newList);
 													var toReturn = {
 													status:"OK",
 													items: newList
@@ -1846,7 +1846,7 @@ else{
 	else{
 		db.collection('tweets').find(query).sort({timestamp:-1}).limit(25).toArray(function(err,doc){
 			if(err){
-				console.log(err)
+				//console.log(err)
 			}
 			if (doc != null){
 				var list = [];
@@ -1856,7 +1856,7 @@ else{
 
 								connection.query('SELECT User2 From Following where User1 =' + mysql.escape(req.body.user) + ';',function(err,result){
 								if(err){
-									console.log(err)
+									//console.log(err)
 								}
 								else{
 									
@@ -1869,7 +1869,7 @@ else{
 										if (k == jsonArrayOfFollowing.length){
 											for(var j = 0; j<=list.length; j++){
 												if(j == list.length){
-													//console.log(newList);
+													////console.log(newList);
 													var toReturn = {
 													status:"OK",
 													items: newList
@@ -1920,26 +1920,26 @@ else{
 })
 
 app.delete('/item/:id',function(req,res){
-	//console.log(req.params.id);
+	////console.log(req.params.id);
 	/*var id = require('mongodb').ObjectId(req.params.id);
 	mongoClient.connect(url,function(err,db){
 	assert.equal(null,err);
 	db.collection('tweets').remove({'_id': id},function(err,doc){
 		if (err){
-			//console.log(err)
+			////console.log(err)
 			res.send({
 				status : "error"
 			});
 		}
 		else{
-			//console.log("TWEET DELETED");
+			////console.log("TWEET DELETED");
 			res.send({
 				status : "OK"
 			})
 		}
 	})
 })*/
-//console.log("in delete item")
+////console.log("in delete item")
 	connection.query('SELECT media FROM Tweets WHERE id = '+mysql.escape(req.params.id), function(err,result){
 		if(err){
 			res.send({
@@ -1948,7 +1948,7 @@ app.delete('/item/:id',function(req,res){
 			})
 		}else{
 			if(result.length!=0 && result[0].media != null){
-			//	console.log("[\""+result[0].media.toString()+"\"]")
+			//	//console.log("[\""+result[0].media.toString()+"\"]")
 				chan.publish(exchange, 'delete', new Buffer(result[0].media.toString()));
 			}
 		}
@@ -1998,7 +1998,7 @@ app.get('/user/:username',function(req,res){
 								followers : follower,
 								following : following
 							}
-							//console.log(response);
+							////console.log(response);
 							res.send({
 								status : "OK",
 								user: response
@@ -2012,14 +2012,14 @@ app.get('/user/:username',function(req,res){
 })
 
 app.get('/user/:username/followers',function(req,res){
-	//console.log(req.params.username)
+	////console.log(req.params.username)
 	if(req.body.limit != null && req.body.limit != ""){
 		connection.query('SELECT User1 From Following where User2 =' + mysql.escape(req.params.username) + ' LIMIT ' + mysql.escape(req.body.limit) + ';',function(err,result){
 			if(err){
-				console.log(err);
+				//console.log(err);
 			}
 			else{
-				//console.log(result)
+				////console.log(result)
 				res.send({status:"OK"});
 			}
 		})
@@ -2027,7 +2027,7 @@ app.get('/user/:username/followers',function(req,res){
 	else{
 		connection.query('SELECT User1 From Following where User2 =' + mysql.escape(req.params.username) + ' LIMIT 50;',function(err,result){
 			if(err){
-				console.log(err);
+				//console.log(err);
 			}
 			else{
 				var response = {
@@ -2041,14 +2041,14 @@ app.get('/user/:username/followers',function(req,res){
 })
 
 app.get('/user/:username/following',function(req,res){
-	//console.log(req.params.username)
+	////console.log(req.params.username)
 	if(req.body.limit != null && req.body.limit != ""){
 		connection.query('SELECT User2 From Following where User1 =' + req.params.username + ' LIMIT ' + req.body.limit + ';',function(err,result){
 			if(err){
-				console.log(err);
+				//console.log(err);
 			}
 			else{
-				//console.log(result)
+				////console.log(result)
 				res.send({status:"OK"});
 			}
 		})
@@ -2056,7 +2056,7 @@ app.get('/user/:username/following',function(req,res){
 	else{
 		connection.query('SELECT User2 From Following where User1 =' + mysql.escape(req.params.username) + ' LIMIT 50;',function(err,result){
 			if(err){
-				console.log(err);
+				//console.log(err);
 			}
 			else{
 				var response = {
@@ -2070,9 +2070,9 @@ app.get('/user/:username/following',function(req,res){
 })
 
 app.post('/item/:id/like',function(req,res){
-	//console.log('in here');
+	////console.log('in here');
 	if(req.body.like == true){
-		//console.log("in true");
+		////console.log("in true");
 		connection.query('UPDATE Data SET LikeCounter = LikeCounter + 1 WHERE id =' + mysql.escape(req.params.id) + ';',function(err,result){
 			if(err){
 				var jsonToSend = {
@@ -2088,7 +2088,7 @@ app.post('/item/:id/like',function(req,res){
 			}
 		})
 	}else if(req.body.like == false){
-		console.log("in false");
+		//console.log("in false");
 
 		connection.query('UPDATE Data SET LikeCounter = LikeCounter - 1 WHERE id =' + mysql.escape(req.params.id) + ';',function(err,result){
 			if(err){
@@ -2113,12 +2113,12 @@ app.post('/item/:id/like',function(req,res){
 
 
 app.post('/follow',function(req,res){
-	//console.log(req.body);
+	////console.log(req.body);
 	if(req.body.follow == true){
-		//console.log("TRUE???")
+		////console.log("TRUE???")
 		connection.query('INSERT INTO Following VALUES('+ mysql.escape(req.session.user) + ',' + mysql.escape(req.body.username) + ')', function(err,result){
 		if(err){
-			console.log(err);
+			//console.log(err);
 			res.send({
 				status: "error",
 				error: err
@@ -2130,7 +2130,7 @@ app.post('/follow',function(req,res){
 	})
 	}
 	else{
-		//console.log("FOLLOW IS NOT TRUE");
+		////console.log("FOLLOW IS NOT TRUE");
 		connection.query('DELETE FROM Following WHERE User1 = '+mysql.escape(req.session.user) +' AND User2 = '+ mysql.escape(req.body.username), function(err,result){
 			if(err){
 				res.send({
@@ -2138,7 +2138,7 @@ app.post('/follow',function(req,res){
 				error: err
 			});
 			}else{
-				console.log(req.session.user +'has unfollow '+req.body.username);
+				//console.log(req.session.user +'has unfollow '+req.body.username);
 				res.send({status: "OK"});
 			}
 		})
@@ -2166,7 +2166,7 @@ app.post('/addmedia', function(req,res){
 })
 
 app.get('/media/:id',function(req,res){
-	//console.log(req.params.id);
+	////console.log(req.params.id);
 	var query = 'SELECT content FROM Media WHERE id = ?';
 	var par = [req.params.id.toString()];
 	cassandraClient.execute(query, par, function(err,result){
@@ -2190,5 +2190,5 @@ app.get('/media/:id',function(req,res){
 
 
 app.listen(8080, "172.31.64.118",function(){
-	console.log("Server listening on port " + 9000);
+	//console.log("Server listening on port " + 9000);
 })

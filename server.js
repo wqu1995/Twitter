@@ -2162,11 +2162,6 @@ app.post('/addmedia', function(req,res){
 			});
 		}
 	})
-	var data = {
-		id: crypto.createHash('md5').update(req.files.content.name+cryptoRandomString(10)).digest('hex'),
-		data : req.files.content.data
-	}
-	chan.publish(exchange, 'add', new Buffer(JSON.stringify(data));
 
 })
 

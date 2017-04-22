@@ -27,7 +27,7 @@ amqp.connect('amqp://test:test@54.234.28.240', function(err,conn){
 })
 
 var cassandraClient = new cassandra.Client({
-	contactPoints: ['54.234.28.240'],
+	contactPoints: ['13.58.74.223'],
 	keyspace: 'twitter'
 },function(err){
 	if(err)

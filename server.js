@@ -49,10 +49,10 @@ mongoClient.connect(url,function(err,db){
 
 
 var connection = mysql.createConnection({
-	host: '52.87.157.232',
+	host: '54.147.82.143',
 	user: 'root',
 	password: 'cse356',
-	database: 'Twitter2'
+	database: 'Twitter'
 });
 
 /*

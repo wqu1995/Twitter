@@ -18,7 +18,7 @@ var amqp = require('amqplib/callback_api');
 var amqpConn, chan;
 var exchange = 'twitter';
 
-amqp.connect('amqp://test:test@54.234.28.240', function(err,conn){
+amqp.connect('amqp://test:test@13.58.74.223', function(err,conn){
 	amqpConn = conn;
 	chan = conn.createChannel(function(err,ch){
 		ch.assertExchange('twitter', 'direct');

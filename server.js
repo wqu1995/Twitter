@@ -544,7 +544,7 @@ app.post('/searchTweets',function(req,res){
 
 	})
 })
- app.post('/search',function(req,res){
+ app.post('/search1',function(req,res){
  	//console.log(req.body);
  	var newStamp = req.body.timestamp || dateTime;
  	var q = req.body.q;
@@ -843,7 +843,7 @@ app.post('/searchTweets',function(req,res){
  
  	}
  })
-app.post('/searchNew',function(req,res){
+app.post('/search',function(req,res){
 	//console.log(req.body);
 	var newStamp = req.body.timestamp || dateTime;
 	var q = req.body.q;
@@ -874,6 +874,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("472")
 						res.send({
@@ -896,6 +897,7 @@ app.post('/searchNew',function(req,res){
 				connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND T.parent IS NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("472")
 						res.send({
@@ -918,6 +920,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 and F.User1 = ' + mysql.escape(req.session.user) + 
 				' AND content like ' + mysql.escape('%'+q+'%') + 'AND timestamp <= '+mysql.escape(newStamp) + 'AND T.parent = ' + mysql.escape(parent)+ 'ORDER by timestamp DESC LIMIT ' + 
 				mysql.escape(req.body.limit),function(err,result){
+					console.log(req.body+result.length);
 					if (err){
 						console.log("472")
 						res.send({
@@ -941,6 +944,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("494")
 
@@ -964,6 +968,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent IS NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("494")
 
@@ -987,6 +992,7 @@ app.post('/searchNew',function(req,res){
 				connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent =' + mysql.escape(parent) + ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("494")
 
@@ -1009,6 +1015,7 @@ app.post('/searchNew',function(req,res){
 		else if(q != null && following ==false && username == null && parent == null && (replies == false || replies == null)){
 			connection.query('SELECT * FROM Tweets WHERE content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("516")
 
@@ -1031,6 +1038,7 @@ app.post('/searchNew',function(req,res){
 		else if(q != null && following == false && username == null && parent == null && replies == true){
 			connection.query('SELECT * FROM Tweets WHERE content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent IS NOT NULL' + ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("516")
 
@@ -1053,6 +1061,7 @@ app.post('/searchNew',function(req,res){
 		else if (q != null && following == false && username == null && parent != null){
 			connection.query('SELECT * FROM Tweets WHERE content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent = ' + mysql.escape(parent)+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("516")
 
@@ -1082,6 +1091,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
 				' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("545")
 
@@ -1105,6 +1115,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
 				' AND parent IS NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("545")
 
@@ -1129,6 +1140,7 @@ app.post('/searchNew',function(req,res){
 				mysql.escape(parent) + 
 				' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("545")
 
@@ -1153,6 +1165,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
 				' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("568")
 
@@ -1176,6 +1189,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
 				'AND parent IS NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("568")
 
@@ -1199,6 +1213,7 @@ app.post('/searchNew',function(req,res){
 			connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+ ' AND parent = ' + mysql.escape(parent) + 
 				' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +
 				mysql.escape(req.body.limit), function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("568")
 
@@ -1221,6 +1236,7 @@ app.post('/searchNew',function(req,res){
 		}
 		else if(q == null && following ==false && username == null && parent == null && (replies == false || replies == null)){
 			connection.query('SELECT * FROM Tweets WHERE timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT ' +mysql.escape(req.body.limit), function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("590")
 
@@ -1242,6 +1258,7 @@ app.post('/searchNew',function(req,res){
 		}
 		else if (q == null && following == false && username == null && parent == null && replies == true){
 			connection.query('SELECT * FROM Tweets WHERE timestamp <= '+mysql.escape(newStamp)+ ' AND parent IS NOT NULL ORDER BY timestamp DESC LIMIT ' +mysql.escape(req.body.limit), function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("590")
 
@@ -1263,6 +1280,7 @@ app.post('/searchNew',function(req,res){
 		}
 		else if(q == null && following == false && username == null && parent != null){
 			connection.query('SELECT * FROM Tweets WHERE timestamp <= '+mysql.escape(newStamp)+ ' AND parent = ' + mysql.escape(parent) + ' ORDER BY timestamp DESC LIMIT ' +mysql.escape(req.body.limit), function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("590")
 
@@ -1294,6 +1312,7 @@ app.post('/searchNew',function(req,res){
 
 			connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("619")
 
@@ -1317,6 +1336,7 @@ app.post('/searchNew',function(req,res){
 			console.log("WTF2")
 			connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent is NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("619")
 
@@ -1341,6 +1361,7 @@ app.post('/searchNew',function(req,res){
 
 			connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent = ' + mysql.escape(parent)+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("619")
 
@@ -1365,6 +1386,7 @@ app.post('/searchNew',function(req,res){
 			//console.log("SEARCH HEREEEEEEEEEEEEEE");
 			connection.query('SELECT * FROM Tweets WHERE username = ' + mysql.escape(username)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("641")
 
@@ -1393,6 +1415,7 @@ app.post('/searchNew',function(req,res){
 
 			connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent IS NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("641")
 
@@ -1417,6 +1440,7 @@ app.post('/searchNew',function(req,res){
 
 			connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
 				' AND content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent = ' + mysql.escape(parent) + ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("641")
 
@@ -1439,6 +1463,7 @@ app.post('/searchNew',function(req,res){
 		else if(q != null && following ==false && username == null && parent == null  && (replies == false || replies == null)){
 
 			connection.query('SELECT * FROM Tweets WHERE content LIKE '+ mysql.escape('%'+q+'%')+ ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("662")
 
@@ -1460,6 +1485,7 @@ app.post('/searchNew',function(req,res){
 		}
 		else if(q != null && following == false && username == null && parent == null && replies == true){
 			connection.query('SELECT * FROM Tweets WHERE content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent IS NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("662")
 
@@ -1485,6 +1511,7 @@ app.post('/searchNew',function(req,res){
 					console.log("WTF7")
 
 			connection.query('SELECT * FROM Tweets WHERE content LIKE '+ mysql.escape('%'+q+'%')+ ' AND parent = ' + mysql.escape(parent) + ' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("662")
 
@@ -1514,6 +1541,7 @@ app.post('/searchNew',function(req,res){
 		else if(q == null && following == true && username == null && parent == null && (replies == false || replies == null)){
 			connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
 				' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("690")
 
@@ -1536,6 +1564,7 @@ app.post('/searchNew',function(req,res){
 		else if (q == null && following == true && username == null && parent == null && replies == true){
 			connection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+
 				' AND parent IS NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("690")
 
@@ -1558,6 +1587,7 @@ app.post('/searchNew',function(req,res){
 		else if (q == null && following == true && username == null && parent != null){
 			onnection.query('SELECT T.* FROM Tweets T, Following F WHERE T.username = F.User2 AND F.User1 = ' + mysql.escape(req.session.user)+ ' AND T.parent = ' + mysql.escape(parent) +
 				' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("690")
 
@@ -1580,6 +1610,7 @@ app.post('/searchNew',function(req,res){
 		else if(q == null && following == false && username != null && parent == null && (replies == false || replies == null)){
 			connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
 				' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("712")
 
@@ -1602,6 +1633,7 @@ app.post('/searchNew',function(req,res){
 		else if (q == null && following == false && username != null && parent == null && replies == true){
 			connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+
 				' AND parent IS NOT NULL AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("712")
 
@@ -1624,6 +1656,7 @@ app.post('/searchNew',function(req,res){
 		else if(q == null && following == false && username != null && parent != null){
 			connection.query('SELECT * FROM Tweets WHERE username =' + mysql.escape(username)+ ' AND parent = ' +
 				' AND timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("712")
 
@@ -1646,6 +1679,7 @@ app.post('/searchNew',function(req,res){
 		else if(q == null && following ==false && username == null && parent == null && (replies == false || replies == null)){
 
 			connection.query('SELECT * FROM Tweets timestamp <= '+mysql.escape(newStamp)+ ' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("733")
 
@@ -1667,6 +1701,7 @@ app.post('/searchNew',function(req,res){
 		}
 		else if (q == null && following == false && username == null && parent == null && replies == true){
 			connection.query('SELECT * FROM Tweets timestamp <= '+mysql.escape(newStamp)+  ' AND parent IS NOT NULL ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("733")
 
@@ -1689,6 +1724,7 @@ app.post('/searchNew',function(req,res){
 
 		else if(q == null && following == false && username == null && parent != null){
 			connection.query('SELECT * FROM Tweets timestamp <= '+mysql.escape(newStamp)+ ' AND parent = '+ mysql.escape(parent) +' ORDER BY timestamp DESC LIMIT 25', function(err, result){
+					console.log(req.body+result.length);
 					if(err){
 						console.log("733")
 
